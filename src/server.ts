@@ -37,6 +37,17 @@ async function shutdown(signal: string) {
     logger.error({ err }, 'Error during shutdown');
     process.exit(1);
   }
-
-
 }
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+
+process.on('unhandledRejection', (reason) => {
+  logger.error({ reason }, 'Unhandled  rejection');
+  process.exit(1);
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error({ err }, 'Uncaught exception');
+  process.exit(1);
+});
